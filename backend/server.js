@@ -12,7 +12,7 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
-// Phase 2 routes (added next): interviewRoutes, questionRoutes, feedbackRoutes
+import interviewRoutes from "./routes/interviewRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
 
 const limiter = rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, //15min
   max: Number(process.env.RATE_LIMIT_MAX) || 100,
   message: { success: false, message: "Too many requests, please try again later" },
 });
@@ -45,7 +45,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
-// app.use("/api/interviews", interviewRoutes);
+app.use("/api/interviews", interviewRoutes);
 // app.use("/api/questions", questionRoutes);
 // app.use("/api/feedback", feedbackRoutes);
 
