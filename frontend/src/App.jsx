@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -18,29 +20,32 @@ import AppLayout from "./layouts/AppLayout";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public / marketing routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public / marketing routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-        {/* Logged-in app routes, nested under the shared AppLayout shell.
-            Route protection (redirect-if-not-logged-in) gets added in
-            Part 4 once AuthContext exists — this just proves the nesting works. */}
-        <Route element={<AppLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/interviews/create" element={<CreateInterviewPage />} />
-          <Route path="/interviews/:sessionId/session" element={<InterviewSessionPage />} />
-          <Route path="/bookmarks" element={<BookmarksPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Route>
+          {/* Logged-in app routes: ProtectedRoute checks auth first, then
+              AppLayout provides the shared shell (nav/sidebar). */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/interviews/create" element={<CreateInterviewPage />} />
+              <Route path="/interviews/:sessionId/session" element={<InterviewSessionPage />} />
+              <Route path="/bookmarks" element={<BookmarksPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+          </Route>
 
-        {/* Catch-all 404 */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Catch-all 404 */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
