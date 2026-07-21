@@ -13,6 +13,8 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
+import questionRoutes from "./routes/questionRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -46,8 +48,8 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/interviews", interviewRoutes);
-// app.use("/api/questions", questionRoutes);
-// app.use("/api/feedback", feedbackRoutes);
+app.use("/api/questions", questionRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // ---- Error handling (must be last) ----
 app.use(notFound);
