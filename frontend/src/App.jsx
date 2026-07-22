@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -22,6 +24,12 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ToastContainer
+          position="top-right"
+          theme="dark"
+          toastClassName="!bg-surface !text-text !border !border-border"
+          autoClose={4000}
+        />
         <Routes>
           {/* Public / marketing routes */}
           <Route path="/" element={<LandingPage />} />
