@@ -5,6 +5,7 @@ import {
   saveAnswer,
   toggleBookmark,
   getBookmarks,
+   getTopicStats,
 } from "../controllers/questionController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { validate } from "../middleware/validateMiddleware.js";
@@ -19,6 +20,7 @@ const router = express.Router();
 router.use(protect);
 
 router.get("/bookmarks", getBookmarks);
+router.get("/stats/topics", getTopicStats);
 router.get("/session/:sessionId", getQuestionsBySession);
 
 router.post("/generate", generateQuestionsValidation, validate, generateQuestions);

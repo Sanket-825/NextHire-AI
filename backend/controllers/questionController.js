@@ -207,3 +207,36 @@ export const generateFeedback = asyncHandler(async (req, res) => {
 
   res.status(200).json({ success: true, question });
 });
+
+
+/**
+ * @desc    Get average score per topic for the logged-in user, weakest
+ *          topics first — used to power "recommended topics to practice"
+ * @route   GET /api/questions/stats/topics?limit=5
+ * @access  Private
+ */
+export const getTopicStats = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 5, 1), 20);
+
+  const topics = await Question.aggregate([
+    { $match: { userId, "feedback.score": { $ne: null } } },
+    {
+      $group: {
+        _id: "$topic",
+        averageScore: { $avg: "$feedback.score" },
+        questionsCount: { $sum: 1 },
+      },
+    },
+    { $sort: { averageScore: 1 } },
+    { $limit: limit },
+  ]);
+
+  const formatted = topics.map((t) => ({
+    topic: t._id,
+    averageScore: Math.round(t.averageScore * 10) / 10,
+    questionsCount: t.questionsCount,
+  }));
+
+  res.status(200).json({ success: true, topics: formatted });
+});
