@@ -6,6 +6,9 @@ import '@fontsource/geist-sans/600.css'
 import '@fontsource/geist-sans/700.css'
 import './index.css'
 import App from './App.jsx'
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
