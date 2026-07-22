@@ -123,3 +123,46 @@ export const getDashboardStats = asyncHandler(async (req, res) => {
     },
   });
 });
+
+/**
+ * @desc    Get weekly session count + average score trend for the logged-in
+ *          user, over the last N weeks (for dashboard charts)
+ * @route   GET /api/interviews/stats/trend?weeks=8
+ * @access  Private
+ */
+export const getScoreTrend = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const weeks = Math.min(Math.max(parseInt(req.query.weeks) || 8, 1), 26);
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - weeks * 7);
+
+  const trend = await InterviewSession.aggregate([
+    { $match: { userId, createdAt: { $gte: startDate } } },
+    {
+      $group: {
+        _id: {
+          isoYear: { $isoWeekYear: "$createdAt" },
+          isoWeek: { $isoWeek: "$createdAt" },
+        },
+        weekStart: { $min: "$createdAt" },
+        sessionsCount: { $sum: 1 },
+        averageScore: {
+          $avg: { $cond: [{ $gt: ["$averageScore", 0] }, "$averageScore", null] },
+        },
+      },
+    },
+    { $sort: { "_id.isoYear": 1, "_id.isoWeek": 1 } },
+  ]);
+
+  const formatted = trend.map((entry) => ({
+    weekStart: entry.weekStart,
+    sessionsCount: entry.sessionsCount,
+    averageScore:
+      entry.averageScore != null ? Math.round(entry.averageScore * 10) / 10 : 0,
+  }));
+
+  res.status(200).json({ success: true, trend: formatted });
+});
+
+
