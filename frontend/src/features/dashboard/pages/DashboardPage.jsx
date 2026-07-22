@@ -7,10 +7,13 @@ import {
 import Card from "../../../components/ui/Card";
 import StatCard from "../components/StatCard";
 import ProgressRing from "../components/ProgressRing";
+import PerformanceCharts from "../components/PerformanceCharts";
 import { useDashboardStats } from "../hooks/useDashboardStats";
+import { useScoreTrend } from "../hooks/useScoreTrend";
 
 export default function DashboardPage() {
   const { data: stats, isLoading, isError } = useDashboardStats();
+  const { data: trend, isLoading: isTrendLoading } = useScoreTrend();
 
   if (isLoading) {
     return (
@@ -54,6 +57,8 @@ export default function DashboardPage() {
       <Card className="flex flex-col items-center py-8">
         <ProgressRing value={stats.averageScore} label="Average Feedback Score" />
       </Card>
+
+      {!isTrendLoading && trend?.length > 0 && <PerformanceCharts trend={trend} />}
     </div>
   );
 }
