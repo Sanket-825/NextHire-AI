@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { HiBookmark, HiOutlineBookmark } from "react-icons/hi2";
 
 import Card from "../../../components/ui/Card";
 import Badge, { difficultyToVariant } from "../../../components/ui/Badge";
@@ -7,16 +8,25 @@ import Button from "../../../components/ui/Button";
 import FeedbackPanel from "./FeedbackPanel";
 import { useSaveAnswer } from "../hooks/useSaveAnswer";
 import { useGenerateFeedback } from "../hooks/useGenerateFeedback";
+import { useToggleBookmark } from "../../bookmarks/hooks/useToggleBookmark";
 import getErrorMessage from "../../../lib/getErrorMessage";
 
 export default function QuestionCard({ question, index, total, sessionId }) {
   const [answer, setAnswer] = useState(question.answer || "");
   const saveAnswer = useSaveAnswer(sessionId);
   const generateFeedback = useGenerateFeedback(sessionId);
+  const toggleBookmark = useToggleBookmark();
 
   const isDirty = answer !== (question.answer || "");
   const hasSavedAnswer = !!question.answer?.trim();
   const hasFeedback = question.feedback?.score != null;
+
+  const handleToggleBookmark = () => {
+    toggleBookmark.mutate(question._id, {
+      onError: (error) =>
+        toast.error(getErrorMessage(error, "Could not update bookmark")),
+    });
+  };
 
   const handleSave = () => {
     saveAnswer.mutate(
@@ -46,6 +56,18 @@ export default function QuestionCard({ question, index, total, sessionId }) {
           <Badge variant={difficultyToVariant(question.difficulty)}>
             {question.difficulty}
           </Badge>
+          <button
+            onClick={handleToggleBookmark}
+            disabled={toggleBookmark.isPending}
+            aria-label={question.bookmarked ? "Remove bookmark" : "Add bookmark"}
+            className="text-accent-green hover:text-text-secondary transition-colors disabled:opacity-50"
+          >
+            {question.bookmarked ? (
+              <HiBookmark className="w-4 h-4" />
+            ) : (
+              <HiOutlineBookmark className="w-4 h-4" />
+            )}
+          </button>
         </div>
       </div>
 
