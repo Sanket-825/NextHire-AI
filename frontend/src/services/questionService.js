@@ -26,3 +26,8 @@ export const saveAnswer = async (questionId, answer) => {
   const res = await axiosInstance.post("/questions/save", { questionId, answer });
   return res.data.question;
 };
+
+export const toggleBookmark = async (questionId) => {
+  const res = await axiosInstance.put("/questions/bookmark", { questionId });
+  return res.data.question;
+};
