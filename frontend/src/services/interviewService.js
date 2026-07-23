@@ -19,3 +19,8 @@ export const createInterviewSession = async (payload) => {
   const res = await axiosInstance.post("/interviews", payload);
   return res.data.session;
 };
+
+export const getInterviewSessionById = async (id) => {
+  const res = await axiosInstance.get(`/interviews/${id}`);
+  return res.data.session;
+};
