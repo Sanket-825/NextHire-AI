@@ -8,6 +8,9 @@ import Card from "../../../components/ui/Card";
 import StatCard from "../components/StatCard";
 import ProgressRing from "../components/ProgressRing";
 import PerformanceCharts from "../components/PerformanceCharts";
+import RecentTimeline from "../components/RecentTimeline";
+import RecommendedTopics from "../components/RecommendedTopics";
+import BookmarksPreview from "../components/BookmarksPreview";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useScoreTrend } from "../hooks/useScoreTrend";
 
@@ -59,6 +62,12 @@ export default function DashboardPage() {
       </Card>
 
       {!isTrendLoading && trend?.length > 0 && <PerformanceCharts trend={trend} />}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <RecentTimeline />
+        <RecommendedTopics />
+        <BookmarksPreview />
+      </div>
     </div>
   );
 }
