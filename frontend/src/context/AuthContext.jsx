@@ -51,6 +51,10 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((updates) => {
+    setUser((prev) => (prev ? { ...prev, ...updates } : prev));
+  }, []);
+
   const value = {
     user,
     isAuthenticated: !!user,
@@ -58,6 +62,7 @@ export function AuthProvider({ children }) {
     register,
     login,
     logout,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
