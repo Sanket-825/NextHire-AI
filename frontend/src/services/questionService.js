@@ -17,5 +17,12 @@ export const getQuestionsBySession = async (sessionId) => {
   return res.data.questions;
 };
  
-
-
+export const generateQuestions = async (sessionId, count = 10) => {
+  const res = await axiosInstance.post("/questions/generate", { sessionId, count });
+  return res.data.questions;
+};
+ 
+export const saveAnswer = async (questionId, answer) => {
+  const res = await axiosInstance.post("/questions/save", { questionId, answer });
+  return res.data.question;
+};
