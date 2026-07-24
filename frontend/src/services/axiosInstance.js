@@ -46,8 +46,11 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const status = error.response?.status;
     const isRefreshCall = originalRequest?.url?.includes("/auth/refresh");
+    const isAuthEndpoint =
+      originalRequest?.url?.includes("/auth/login") ||
+      originalRequest?.url?.includes("/auth/register");
 
-    if (status === 401 && !originalRequest._retry && !isRefreshCall) {
+    if (status === 401 && !originalRequest._retry && !isRefreshCall && !isAuthEndpoint) {
       originalRequest._retry = true;
       try {
         const newAccessToken = await refreshAccessToken();
