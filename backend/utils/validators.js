@@ -13,6 +13,16 @@ export const loginValidation = [
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
+export const verifyOtpValidation = [
+  body("email").trim().isEmail().withMessage("Please provide a valid email").normalizeEmail(),
+  body("otp").trim().isLength({ min: 6, max: 6 }).withMessage("Code must be 6 digits")
+    .isNumeric().withMessage("Code must contain only digits"),
+];
+
+export const resendOtpValidation = [
+  body("email").trim().isEmail().withMessage("Please provide a valid email").normalizeEmail(),
+];
+
 export const forgotPasswordValidation = [
   body("email").trim().isEmail().withMessage("Please provide a valid email").normalizeEmail(),
 ];

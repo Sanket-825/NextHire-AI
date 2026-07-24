@@ -1,6 +1,8 @@
 import express from "express";
 import {
   registerUser,
+  verifyOtp,
+  resendOtp,
   loginUser,
   logoutUser,
   getMe,
@@ -12,6 +14,8 @@ import { protect } from "../middleware/authMiddleware.js";
 import { validate } from "../middleware/validateMiddleware.js";
 import {
   registerValidation,
+  verifyOtpValidation,
+  resendOtpValidation,
   loginValidation,
   forgotPasswordValidation,
   resetPasswordValidation,
@@ -20,6 +24,8 @@ import {
 const router = express.Router();
 
 router.post("/register", registerValidation, validate, registerUser);
+router.post("/verify-otp", verifyOtpValidation, validate, verifyOtp);
+router.post("/resend-otp", resendOtpValidation, validate, resendOtp);
 router.post("/login", loginValidation, validate, loginUser);
 router.post("/logout", protect, logoutUser);
 router.get("/me", protect, getMe);
