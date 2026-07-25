@@ -29,12 +29,12 @@ export default function RegisterPage() {
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
     try {
-      await registerUser({
+      const { email } = await registerUser({
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
-      navigate("/dashboard", { replace: true });
+      navigate("/verify-otp", { state: { email } });
     } catch (error) {
       toast.error(getErrorMessage(error, "Could not create your account"));
     } finally {

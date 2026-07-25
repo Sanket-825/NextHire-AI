@@ -1,6 +1,12 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { getAccessToken, clearTokens } from "../lib/tokenStorage";
-import { registerUser, loginUser, logoutUser, getCurrentUser } from "../services/authService";
+import {
+  registerUser,
+  verifyOtp as verifyOtpRequest,
+  loginUser,
+  logoutUser,
+  getCurrentUser,
+} from "../services/authService";
 
 const AuthContext = createContext(null);
 
@@ -35,9 +41,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   const register = useCallback(async (formData) => {
-    const newUser = await registerUser(formData);
-    setUser(newUser);
-    return newUser;
+    return registerUser(formData);
+  }, []);
+
+  const verifyOtp = useCallback(async (email, otp) => {
+    const verifiedUser = await verifyOtpRequest(email, otp);
+    setUser(verifiedUser);
+    return verifiedUser;
   }, []);
 
   const login = useCallback(async (formData) => {
@@ -60,6 +70,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!user,
     isLoading,
     register,
+    verifyOtp,
     login,
     logout,
     updateUser,

@@ -3,8 +3,18 @@ import { setTokens, clearTokens } from "../lib/tokenStorage";
 
 export const registerUser = async (formData) => {
   const res = await axiosInstance.post("/auth/register", formData);
+  return res.data; // { success, message, email } — no tokens yet, OTP required next
+};
+
+export const verifyOtp = async (email, otp) => {
+  const res = await axiosInstance.post("/auth/verify-otp", { email, otp });
   setTokens({ accessToken: res.data.accessToken, refreshToken: res.data.refreshToken });
   return res.data.user;
+};
+
+export const resendOtp = async (email) => {
+  const res = await axiosInstance.post("/auth/resend-otp", { email });
+  return res.data;
 };
 
 export const loginUser = async (formData) => {
