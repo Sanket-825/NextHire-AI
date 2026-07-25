@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import AuthLayout from "../components/AuthLayout";
+import SplitAuthLayout from "../components/SplitAuthLayout";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
 import { forgotPassword } from "../../../services/authService";
@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
 
   if (isSent) {
     return (
-      <AuthLayout
+      <SplitAuthLayout
         title="Check your email"
         subtitle={`We've sent a password reset link to ${getValues("email")}.`}
         footer={
@@ -53,12 +53,12 @@ export default function ForgotPasswordPage() {
         >
           Didn&apos;t get it? Try again
         </Button>
-      </AuthLayout>
+      </SplitAuthLayout>
     );
   }
 
   return (
-    <AuthLayout
+    <SplitAuthLayout
       title="Forgot your password?"
       subtitle="Enter your email and we'll send you a reset link."
       footer={
@@ -90,6 +90,6 @@ export default function ForgotPasswordPage() {
           Send reset link
         </Button>
       </form>
-    </AuthLayout>
+    </SplitAuthLayout>
   );
 }

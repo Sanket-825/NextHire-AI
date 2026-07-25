@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import AuthLayout from "../components/AuthLayout";
+import SplitAuthLayout from "../components/SplitAuthLayout";
 import PasswordInput from "../components/PasswordInput";
 import Button from "../../../components/ui/Button";
 import { resetPassword } from "../../../services/authService";
@@ -37,7 +37,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <AuthLayout
+    <SplitAuthLayout
       title="Reset your password"
       subtitle="Choose a new password for your account."
       footer={
@@ -80,6 +80,6 @@ export default function ResetPasswordPage() {
           Reset password
         </Button>
       </form>
-    </AuthLayout>
+    </SplitAuthLayout>
   );
 }
