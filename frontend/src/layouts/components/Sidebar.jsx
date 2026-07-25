@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import {
-  HiOutlineSparkles,
   HiOutlineSquares2X2,
   HiOutlinePlusCircle,
   HiOutlineBookmark,
   HiOutlineUser,
   HiOutlineXMark,
 } from "react-icons/hi2";
+import Logo from "../../components/brand/Logo";
 
 const NAV_LINKS = [
   { to: "/dashboard", label: "Dashboard", icon: HiOutlineSquares2X2, end: true },
@@ -41,7 +41,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="flex items-center justify-between mb-8 px-2">
           <span className="flex items-center gap-2 text-text font-semibold">
             <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent-green/10 border border-accent-green/30">
-              <HiOutlineSparkles className="w-4 h-4 text-accent-green" />
+              <Logo className="w-4 h-4 text-accent-green" />
             </span>
             NextHire AI
           </span>
