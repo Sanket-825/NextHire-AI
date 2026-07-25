@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import AuthLayout from "../components/AuthLayout";
+import SplitAuthLayout from "../components/SplitAuthLayout";
 import PasswordInput from "../components/PasswordInput";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
@@ -39,7 +39,7 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthLayout
+    <SplitAuthLayout
       title="Welcome back"
       subtitle="Log in to continue practicing."
       footer={
@@ -88,6 +88,6 @@ export default function LoginPage() {
           Log in
         </Button>
       </form>
-    </AuthLayout>
+    </SplitAuthLayout>
   );
 }
