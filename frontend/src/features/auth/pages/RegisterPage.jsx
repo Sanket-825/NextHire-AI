@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import AuthLayout from "../components/AuthLayout";
+import SplitAuthLayout from "../components/SplitAuthLayout";
 import PasswordInput from "../components/PasswordInput";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
@@ -43,7 +43,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <AuthLayout
+    <SplitAuthLayout
       title="Create your account"
       subtitle="Start practicing interviews with AI feedback."
       footer={
@@ -112,6 +112,6 @@ export default function RegisterPage() {
           Create account
         </Button>
       </form>
-    </AuthLayout>
+    </SplitAuthLayout>
   );
 }
