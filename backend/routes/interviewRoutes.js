@@ -6,6 +6,7 @@ import {
   deleteInterviewSession,
   getDashboardStats,
   getScoreTrend,
+  getInterviewOptions,
 } from "../controllers/interviewController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { validate } from "../middleware/validateMiddleware.js";
@@ -17,6 +18,7 @@ router.use(protect);
 
 router.get("/stats/dashboard", getDashboardStats);
 router.get("/stats/trend", getScoreTrend);
+router.get("/meta/options", getInterviewOptions);
 
 router.post("/", createSessionValidation, validate, createInterviewSession);
 router.get("/", getInterviewSessions);
