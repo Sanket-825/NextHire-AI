@@ -11,7 +11,7 @@ export const INTERVIEW_TYPE_CATEGORIES = [
   { category: "Design", options: ["UI/UX Design", "Figma"] },
   { category: "Data & AI", options: ["Data Structures", "Machine Learning", "Data Analysis"] },
   { category: "Mobile", options: ["Android", "iOS", "React Native", "Flutter"] },
-  { category: "Communication", options: ["English"] },
+  // { category: "Communication", options: ["English", "Hindi", "Marathi"] },
 ];
 
 export const INTERVIEW_TYPES = INTERVIEW_TYPE_CATEGORIES.flatMap((group) => group.options);
