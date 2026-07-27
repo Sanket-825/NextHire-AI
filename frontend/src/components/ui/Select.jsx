@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { HiChevronDown } from "react-icons/hi2";
 
 const Select = forwardRef(function Select(
-  { label, error, id, className, options, placeholder, ...props },
+  { label, error, id, className, options, groups, placeholder, ...props },
   ref
 ) {
   const selectId = id || props.name;
@@ -35,11 +35,21 @@ const Select = forwardRef(function Select(
               {placeholder}
             </option>
           )}
-          {options.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
+          {groups
+            ? groups.map((group) => (
+                <optgroup key={group.category} label={group.category}>
+                  {group.options.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </optgroup>
+              ))
+            : options.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
         </select>
         <HiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
       </div>
