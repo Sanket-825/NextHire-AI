@@ -29,3 +29,8 @@ export const getInterviewOptions = async () => {
   const res = await axiosInstance.get("/interviews/meta/options");
   return res.data.options;
 };
+
+export const deleteInterviewSession = async (id) => {
+  const res = await axiosInstance.delete(`/interviews/${id}`);
+  return res.data;
+};

@@ -17,7 +17,12 @@ export default function RecentTimeline() {
 
   return (
     <Card>
-      <h3 className="text-sm font-medium text-text-secondary mb-4">Recent Interviews</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-medium text-text-secondary">Recent Interviews</h3>
+        <Link to="/interviews" className="text-xs text-accent-green hover:underline">
+          See all
+        </Link>
+      </div>
 
       {isLoading && (
         <p className="text-sm text-text-secondary py-4">Loading...</p>
