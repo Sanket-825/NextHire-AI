@@ -36,6 +36,7 @@ backend/uploads/*
 **/Notes.txt
 **/interview.txt
 **/FrontendNotes.txt
+**/Deployment.txt
 
 #test-assets
 backend/test-assets/
