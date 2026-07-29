@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { EXPERIENCE_LEVELS, DIFFICULTIES, INTERVIEW_TYPES } from "../utils/interviewOptions.js";
 
 const interviewSessionSchema = new mongoose.Schema(
   {
@@ -15,28 +16,17 @@ const interviewSessionSchema = new mongoose.Schema(
     experienceLevel: {
       type: String,
       required: [true, "Experience level is required"],
-      enum: ["Fresher", "0-1 Years", "2-3 Years", "4-5 Years", "5+ Years", "Senior"],
+      enum: EXPERIENCE_LEVELS,
     },
     difficulty: {
       type: String,
-      enum: ["Easy", "Medium", "Hard"],
+      enum: DIFFICULTIES,
       default: "Medium",
     },
     interviewType: {
       type: String,
       required: [true, "Interview type is required"],
-      enum: [
-        "Technical",
-        "HR",
-        "Behavioral",
-        "DSA",
-        "System Design",
-        "JavaScript",
-        "React",
-        "Node.js",
-        "MongoDB",
-        "SQL",
-      ],
+      enum: INTERVIEW_TYPES,
     },
     status: {
       type: String,

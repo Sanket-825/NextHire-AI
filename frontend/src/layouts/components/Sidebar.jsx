@@ -3,6 +3,7 @@ import clsx from "clsx";
 import {
   HiOutlineSquares2X2,
   HiOutlinePlusCircle,
+  HiOutlineClipboardDocumentList,
   HiOutlineBookmark,
   HiOutlineUser,
   HiOutlineXMark,
@@ -12,12 +13,11 @@ import Logo from "../../components/brand/Logo";
 const NAV_LINKS = [
   { to: "/dashboard", label: "Dashboard", icon: HiOutlineSquares2X2, end: true },
   { to: "/interviews/create", label: "Create Interview", icon: HiOutlinePlusCircle },
+  { to: "/interviews", label: "All Sessions", icon: HiOutlineClipboardDocumentList, end: true },
   { to: "/bookmarks", label: "Bookmarks", icon: HiOutlineBookmark },
   { to: "/profile", label: "Profile", icon: HiOutlineUser },
 ];
 
-// Fixed on desktop (md+), slide-in drawer on mobile controlled by
-// isOpen/onClose (wired up from Topbar's hamburger button).
 export default function Sidebar({ isOpen, onClose }) {
   return (
     <>

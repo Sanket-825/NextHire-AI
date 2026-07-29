@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import InterviewSession from "../models/InterviewSession.js";
 import Question from "../models/Question.js";
+import { EXPERIENCE_LEVELS, DIFFICULTIES, INTERVIEW_TYPES, INTERVIEW_TYPE_CATEGORIES } from "../utils/interviewOptions.js";
 
 /**
  * @desc    Create a new interview session
@@ -165,4 +166,22 @@ export const getScoreTrend = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, trend: formatted });
 });
 
-
+/**
+ * @desc    Get the valid options for creating an interview session
+ *          (experience levels, difficulties, interview types) — lets the
+ *          frontend build its dropdowns dynamically instead of hardcoding
+ *          them, so adding a new option is a backend-only change.
+ * @route   GET /api/interviews/meta/options
+ * @access  Private
+ */
+export const getInterviewOptions = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    success: true,
+    options: {
+      experienceLevels: EXPERIENCE_LEVELS,
+      difficulties: DIFFICULTIES,
+      interviewTypes: INTERVIEW_TYPES,
+      interviewTypeCategories: INTERVIEW_TYPE_CATEGORIES,
+    },
+  });
+});

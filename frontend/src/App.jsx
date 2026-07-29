@@ -15,6 +15,7 @@ import ResetPasswordPage from "./features/auth/pages/ResetPasswordPage";
 
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
 import CreateInterviewPage from "./features/interviews/pages/CreateInterviewPage";
+import SessionsPage from "./features/interviews/pages/SessionsPage";
 import InterviewSessionPage from "./features/interviews/pages/InterviewSessionPage";
 import BookmarksPage from "./features/bookmarks/pages/BookmarksPage";
 import ProfilePage from "./features/profile/pages/ProfilePage";
@@ -45,6 +46,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/interviews" element={<SessionsPage />} />
               <Route path="/interviews/create" element={<CreateInterviewPage />} />
               <Route path="/interviews/:sessionId/session" element={<InterviewSessionPage />} />
               <Route path="/bookmarks" element={<BookmarksPage />} />

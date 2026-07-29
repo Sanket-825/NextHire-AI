@@ -1,11 +1,5 @@
 import { body } from "express-validator";
-
-const VALID_EXPERIENCE_LEVELS = ["Fresher", "0-1 Years", "2-3 Years", "4-5 Years", "5+ Years", "Senior"];
-const VALID_DIFFICULTIES = ["Easy", "Medium", "Hard"];
-const VALID_INTERVIEW_TYPES = [
-  "Technical", "HR", "Behavioral", "DSA", "System Design",
-  "JavaScript", "React", "Node.js", "MongoDB", "SQL",
-];
+import { EXPERIENCE_LEVELS as VALID_EXPERIENCE_LEVELS, DIFFICULTIES as VALID_DIFFICULTIES, INTERVIEW_TYPES as VALID_INTERVIEW_TYPES } from "./interviewOptions.js";
 
 export const createSessionValidation = [
   body("role").trim().notEmpty().withMessage("Role is required"),

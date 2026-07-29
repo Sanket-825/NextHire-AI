@@ -8,18 +8,13 @@ import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
 import Button from "../../../components/ui/Button";
 import { createInterviewSession } from "../../../services/interviewService";
+import { useInterviewOptions } from "../hooks/useInterviewOptions";
 import getErrorMessage from "../../../lib/getErrorMessage";
-
-const EXPERIENCE_LEVELS = ["Fresher", "0-1 Years", "2-3 Years", "4-5 Years", "5+ Years", "Senior"];
-const DIFFICULTIES = ["Easy", "Medium", "Hard"];
-const INTERVIEW_TYPES = [
-  "Technical", "HR", "Behavioral", "DSA", "System Design",
-  "JavaScript", "React", "Node.js", "MongoDB", "SQL",
-];
 
 export default function CreateInterviewPage() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: options, isLoading: isLoadingOptions, isError: isOptionsError } = useInterviewOptions();
 
   const {
     register,
@@ -51,41 +46,53 @@ export default function CreateInterviewPage() {
       </div>
 
       <Card>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-          <Input
-            label="Job role"
-            placeholder="e.g. Frontend Developer"
-            error={errors.role?.message}
-            {...register("role", { required: "Role is required" })}
-          />
+        {isLoadingOptions && (
+          <p className="text-sm text-text-secondary py-4 text-center">Loading options...</p>
+        )}
 
-          <Select
-            label="Experience level"
-            placeholder="Select experience level"
-            options={EXPERIENCE_LEVELS}
-            error={errors.experienceLevel?.message}
-            {...register("experienceLevel", { required: "Experience level is required" })}
-          />
+        {isOptionsError && (
+          <p className="text-sm text-error py-4 text-center">
+            Couldn't load interview options. Please refresh the page.
+          </p>
+        )}
 
-          <Select
-            label="Difficulty"
-            options={DIFFICULTIES}
-            error={errors.difficulty?.message}
-            {...register("difficulty", { required: "Difficulty is required" })}
-          />
+        {options && (
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+            <Input
+              label="Job role"
+              placeholder="e.g. Frontend Developer"
+              error={errors.role?.message}
+              {...register("role", { required: "Role is required" })}
+            />
 
-          <Select
-            label="Interview type"
-            placeholder="Select interview type"
-            options={INTERVIEW_TYPES}
-            error={errors.interviewType?.message}
-            {...register("interviewType", { required: "Interview type is required" })}
-          />
+            <Select
+              label="Experience level"
+              placeholder="Select experience level"
+              options={options.experienceLevels}
+              error={errors.experienceLevel?.message}
+              {...register("experienceLevel", { required: "Experience level is required" })}
+            />
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full mt-2">
-            Create interview
-          </Button>
-        </form>
+            <Select
+              label="Difficulty"
+              options={options.difficulties}
+              error={errors.difficulty?.message}
+              {...register("difficulty", { required: "Difficulty is required" })}
+            />
+
+            <Select
+              label="Interview type"
+              placeholder="Select interview type"
+              groups={options.interviewTypeCategories}
+              error={errors.interviewType?.message}
+              {...register("interviewType", { required: "Interview type is required" })}
+            />
+
+            <Button type="submit" isLoading={isSubmitting} className="w-full mt-2">
+              Create interview
+            </Button>
+          </form>
+        )}
       </Card>
     </div>
   );
