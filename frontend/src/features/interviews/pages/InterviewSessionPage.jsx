@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 
 import Card from "../../../components/ui/Card";
 import Badge, { difficultyToVariant } from "../../../components/ui/Badge";
@@ -13,8 +14,18 @@ import getErrorMessage from "../../../lib/getErrorMessage";
 
 export default function InterviewSessionPage() {
   const { sessionId } = useParams();
-  const { data: session, isLoading: isSessionLoading } = useInterviewSession(sessionId);
-  const { data: questions, isLoading: areQuestionsLoading } = useSessionQuestions(sessionId);
+  const navigate = useNavigate();
+  const {
+    data: session,
+    isLoading: isSessionLoading,
+    isError: isSessionError,
+    error: sessionError,
+  } = useInterviewSession(sessionId);
+  const {
+    data: questions,
+    isLoading: areQuestionsLoading,
+    isError: areQuestionsError,
+  } = useSessionQuestions(sessionId);
   const generateQuestions = useGenerateQuestions(sessionId);
 
   const handleGenerate = () => {
@@ -28,6 +39,26 @@ export default function InterviewSessionPage() {
     return (
       <div className="flex items-center justify-center py-24 text-text-secondary text-sm">
         Loading session...
+      </div>
+    );
+  }
+
+  // Session doesn't exist (deleted, bad link, wrong id, etc.) or failed to load.
+  // Bail out here with a friendly message instead of crashing on session.role below.
+  if (isSessionError || !session) {
+    return (
+      <div className="max-w-md mx-auto flex flex-col items-center text-center py-24 gap-3">
+        <HiOutlineExclamationTriangle className="w-10 h-10 text-text-secondary" />
+        <h1 className="text-lg font-semibold text-text">Session not found</h1>
+        <p className="text-sm text-text-secondary">
+          {getErrorMessage(
+            sessionError,
+            "This interview session doesn't exist or may have been deleted."
+          )}
+        </p>
+        <Button className="mt-2" onClick={() => navigate("/interviews")}>
+          Back to all sessions
+        </Button>
       </div>
     );
   }
@@ -51,7 +82,15 @@ export default function InterviewSessionPage() {
         <p className="text-sm text-text-secondary">Loading questions...</p>
       )}
 
-      {!areQuestionsLoading && questions?.length === 0 && (
+      {!areQuestionsLoading && areQuestionsError && (
+        <Card className="text-center py-10">
+          <p className="text-sm text-text-secondary">
+            Couldn't load questions for this session. Try refreshing the page.
+          </p>
+        </Card>
+      )}
+
+      {!areQuestionsLoading && !areQuestionsError && questions?.length === 0 && (
         <Card className="text-center py-10">
           <p className="text-sm text-text-secondary mb-4">
             No questions generated yet for this session.
@@ -65,7 +104,7 @@ export default function InterviewSessionPage() {
         </Card>
       )}
 
-      {!areQuestionsLoading && questions?.length > 0 && (
+      {!areQuestionsLoading && !areQuestionsError && questions?.length > 0 && (
         <div className="flex flex-col gap-4">
           {questions.map((q, i) => (
             <QuestionCard

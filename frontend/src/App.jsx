@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -32,31 +33,33 @@ export default function App() {
           toastClassName="!bg-surface !text-text !border !border-border"
           autoClose={4000}
         />
-        <Routes>
-          {/* Public / marketing routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verify-otp" element={<VerifyOtpPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+        <ErrorBoundary>
+          <Routes>
+            {/* Public / marketing routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify-otp" element={<VerifyOtpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-          {/* Logged-in app routes: ProtectedRoute checks auth first, then
-              AppLayout provides the shared shell (nav/sidebar). */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<AppLayout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/interviews" element={<SessionsPage />} />
-              <Route path="/interviews/create" element={<CreateInterviewPage />} />
-              <Route path="/interviews/:sessionId/session" element={<InterviewSessionPage />} />
-              <Route path="/bookmarks" element={<BookmarksPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
+            {/* Logged-in app routes: ProtectedRoute checks auth first, then
+                AppLayout provides the shared shell (nav/sidebar). */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AppLayout />}>
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/interviews" element={<SessionsPage />} />
+                <Route path="/interviews/create" element={<CreateInterviewPage />} />
+                <Route path="/interviews/:sessionId/session" element={<InterviewSessionPage />} />
+                <Route path="/bookmarks" element={<BookmarksPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Catch-all 404 */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* Catch-all 404 */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </ErrorBoundary>
       </BrowserRouter>
     </AuthProvider>
   );
