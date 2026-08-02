@@ -59,13 +59,20 @@ NextHire-AI/
 │   ├── utils/            # Token generation, etc.
 │   └── server.js
 └── frontend/
+    ├── public/
     ├── src/
-    │   ├── features/     # Feature-based folders: auth, dashboard, interviews, bookmarks, profile
-    │   ├── components/   # Shared UI primitives
+    │   ├── assets/        # (currently empty — placeholder for static images/icons)
+    │   ├── components/    # Shared UI primitives
     │   ├── context/       # AuthContext
+    │   ├── features/      # Feature-based folders: auth, dashboard, interviews, bookmarks, profile
+    │   ├── hooks/         # App-wide hooks not tied to a feature (e.g. useLenis)
     │   ├── layouts/       # AppLayout, Sidebar, Topbar
     │   ├── lib/           # Helpers (error messages, token storage)
-    │   └── services/      # Axios instance + API service layer
+    │   ├── pages/         # Standalone pages (LandingPage, NotFoundPage)
+    │   ├── services/      # Axios instance + API service layer
+    │   ├── App.jsx
+    │   ├── index.css
+    │   └── main.jsx
     └── vercel.json        # SPA rewrite rule
 ```
 
@@ -104,4 +111,4 @@ Both platforms auto-deploy on every push to `main`.
 
 ## Author
 
-Built by [Sanket Parab](https://github.com/Sanket-825) — a portfolio project built end-to-end (backend, frontend, deployment) to demonstrate full-stack MERN development.
+Built by [Sanket](https://github.com/Sanket-825) — a portfolio project built end-to-end (backend, frontend, deployment) to demonstrate full-stack MERN development.
