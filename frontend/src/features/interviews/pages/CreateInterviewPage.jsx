@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,10 @@ import getErrorMessage from "../../../lib/getErrorMessage";
 
 export default function CreateInterviewPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // Present only when arriving from a "Recommended Topics" click on the
+  // dashboard. Optional — a normal visit to this page has no query param.
+  const focusTopic = searchParams.get("focusTopic") || undefined;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: options, isLoading: isLoadingOptions, isError: isOptionsError } = useInterviewOptions();
 
@@ -28,7 +32,10 @@ export default function CreateInterviewPage() {
     setIsSubmitting(true);
     try {
       const session = await createInterviewSession(formData);
-      navigate(`/interviews/${session._id}/session`);
+      // focusTopic only affects question generation on the next page — it's
+      // not part of the session itself, so it's passed via route state
+      // rather than saved anywhere.
+      navigate(`/interviews/${session._id}/session`, { state: { focusTopic } });
     } catch (error) {
       toast.error(getErrorMessage(error, "Could not create interview session"));
     } finally {
@@ -43,6 +50,11 @@ export default function CreateInterviewPage() {
         <p className="text-sm text-text-secondary mt-1">
           Tell us what you'd like to practice and we'll generate questions for you.
         </p>
+        {focusTopic && (
+          <p className="text-sm text-accent-green mt-2">
+            Practicing focus topic: <span className="font-medium">{focusTopic}</span>
+          </p>
+        )}
       </div>
 
       <Card>

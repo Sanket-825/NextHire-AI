@@ -7,10 +7,10 @@ import { generateInterviewQuestions, generateAnswerFeedback } from "../services/
  * @desc    Generate AI interview questions for a given session and save them
  * @route   POST /api/questions/generate
  * @access  Private
- * @body    { sessionId, count? }
+ * @body    { sessionId, count?, focusTopic? }
  */
 export const generateQuestions = asyncHandler(async (req, res) => {
-  const { sessionId, count } = req.body;
+  const { sessionId, count, focusTopic } = req.body;
 
   if (!sessionId) {
     res.status(400);
@@ -33,6 +33,9 @@ export const generateQuestions = asyncHandler(async (req, res) => {
     difficulty: session.difficulty,
     interviewType: session.interviewType,
     count: count || 10,
+    // Optional — when provided, the AI locks all generated questions onto
+    // this topic; when omitted, generation behaves exactly as before.
+    focusTopic: focusTopic || undefined,
   });
 
   const questionDocs = aiQuestions.map((q) => ({
@@ -222,21 +225,43 @@ export const getTopicStats = asyncHandler(async (req, res) => {
   const topics = await Question.aggregate([
     { $match: { userId, "feedback.score": { $ne: null } } },
     {
+      // Join back to the session each question belongs to, purely to know
+      // which interviewType it was generated under (e.g. "Frontend/React").
+      // This is informational only — it does not affect scoring or ordering.
+      $lookup: {
+        from: "interviewsessions",
+        localField: "sessionId",
+        foreignField: "_id",
+        as: "session",
+      },
+    },
+    { $unwind: "$session" },
+    {
       $group: {
         _id: "$topic",
         averageScore: { $avg: "$feedback.score" },
         questionsCount: { $sum: 1 },
+        interviewTypes: { $push: "$session.interviewType" },
       },
     },
     { $sort: { averageScore: 1 } },
     { $limit: limit },
   ]);
 
-  const formatted = topics.map((t) => ({
-    topic: t._id,
-    averageScore: Math.round(t.averageScore * 10) / 10,
-    questionsCount: t.questionsCount,
-  }));
+  const formatted = topics.map((t) => {
+    const counts = {};
+    for (const type of t.interviewTypes) {
+      counts[type] = (counts[type] || 0) + 1;
+    }
+    const mostCommonType = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0];
+
+    return {
+      topic: t._id,
+      averageScore: Math.round(t.averageScore * 10) / 10,
+      questionsCount: t.questionsCount,
+      interviewType: mostCommonType,
+    };
+  });
 
   res.status(200).json({ success: true, topics: formatted });
 });
