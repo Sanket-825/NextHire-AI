@@ -17,8 +17,8 @@ export const getQuestionsBySession = async (sessionId) => {
   return res.data.questions;
 };
  
-export const generateQuestions = async (sessionId, count = 10) => {
-  const res = await axiosInstance.post("/questions/generate", { sessionId, count });
+export const generateQuestions = async (sessionId, count = 6, focusTopic) => {
+  const res = await axiosInstance.post("/questions/generate", { sessionId, count, focusTopic });
   return res.data.questions;
 };
  

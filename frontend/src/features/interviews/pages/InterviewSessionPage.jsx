@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 
@@ -15,6 +15,11 @@ import getErrorMessage from "../../../lib/getErrorMessage";
 export default function InterviewSessionPage() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  // Carried over from CreateInterviewPage when the session was started from
+  // a "Recommended Topics" click on the dashboard. Optional — undefined for
+  // any normal session creation flow.
+  const focusTopic = location.state?.focusTopic;
   const {
     data: session,
     isLoading: isSessionLoading,
@@ -29,10 +34,13 @@ export default function InterviewSessionPage() {
   const generateQuestions = useGenerateQuestions(sessionId);
 
   const handleGenerate = () => {
-    generateQuestions.mutate(10, {
-      onError: (error) =>
-        toast.error(getErrorMessage(error, "Could not generate questions")),
-    });
+    generateQuestions.mutate(
+      { count: 6, focusTopic },
+      {
+        onError: (error) =>
+          toast.error(getErrorMessage(error, "Could not generate questions")),
+      }
+    );
   };
 
   if (isSessionLoading) {
@@ -92,12 +100,18 @@ export default function InterviewSessionPage() {
 
       {!areQuestionsLoading && !areQuestionsError && questions?.length === 0 && (
         <Card className="text-center py-10">
-          <p className="text-sm text-text-secondary mb-4">
+          <p className="text-sm text-text-secondary mb-1">
             No questions generated yet for this session.
           </p>
+          {focusTopic && (
+            <p className="text-xs text-accent-green mb-4">
+              Focusing on: <span className="font-medium">{focusTopic}</span>
+            </p>
+          )}
           <Button
             isLoading={generateQuestions.isPending}
             onClick={handleGenerate}
+            className={focusTopic ? "" : "mt-4"}
           >
             Generate questions
           </Button>

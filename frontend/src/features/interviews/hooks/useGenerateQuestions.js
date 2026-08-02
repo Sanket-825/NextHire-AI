@@ -5,7 +5,7 @@ export function useGenerateQuestions(sessionId) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (count) => generateQuestions(sessionId, count),
+    mutationFn: ({ count, focusTopic } = {}) => generateQuestions(sessionId, count, focusTopic),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["session-questions", sessionId] });
       queryClient.invalidateQueries({ queryKey: ["interview-session", sessionId] });

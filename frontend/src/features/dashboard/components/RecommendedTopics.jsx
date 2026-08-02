@@ -9,9 +9,13 @@ export default function RecommendedTopics() {
 
   return (
     <Card>
-      <h3 className="text-sm font-medium text-text-secondary mb-4">Recommended Topics</h3>
+      <h3 className="text-sm font-medium text-text-secondary mb-4">
+        Recommended Topics
+      </h3>
 
-      {isLoading && <p className="text-sm text-text-secondary py-4">Loading...</p>}
+      {isLoading && (
+        <p className="text-sm text-text-secondary py-4">Loading...</p>
+      )}
 
       {!isLoading && topics?.length === 0 && (
         <p className="text-sm text-text-secondary py-4">
@@ -22,17 +26,30 @@ export default function RecommendedTopics() {
       {!isLoading && topics?.length > 0 && (
         <ul className="flex flex-col gap-3">
           {topics.map((t) => (
-            <li key={t.topic} className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent-amber/10 border border-accent-amber/30 shrink-0">
-                <HiOutlineLightBulb className="w-4 h-4 text-accent-amber" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm text-text truncate">{t.topic}</p>
-                <p className="text-xs text-text-secondary">
-                  Avg {t.averageScore}/10 · {t.questionsCount} question
-                  {t.questionsCount !== 1 ? "s" : ""}
-                </p>
-              </div>
+            <li key={t.topic}>
+              <Link
+                to={`/interviews/create?focusTopic=${encodeURIComponent(t.topic)}`}
+                className="flex items-center gap-3 rounded-lg -mx-2 px-2 py-1.5 transition-colors hover:bg-accent-green/5"
+              >
+                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent-amber/10 border border-accent-amber/30 shrink-0">
+                  <HiOutlineLightBulb className="w-4 h-4 text-accent-amber" />
+                </span>
+                <div className="min-w-0 flex-1 flex items-center justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-sm text-text truncate">{t.topic}</p>
+                    <p className="text-xs text-text-secondary">
+                      Avg {t.averageScore}/10 · {t.questionsCount} question
+                      {t.questionsCount !== 1 ? "s" : ""}
+                    </p>
+                  </div>
+
+                  {t.interviewType && (
+                    <span className="text-xs text-text-secondary whitespace-nowrap">
+                      {t.interviewType}
+                    </span>
+                  )}
+                </div>
+              </Link>
             </li>
           ))}
         </ul>

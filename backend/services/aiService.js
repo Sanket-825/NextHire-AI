@@ -16,7 +16,8 @@ export const generateInterviewQuestions = async ({
   experienceLevel,
   difficulty,
   interviewType,
-  count = 10,
+  count = 6,
+  focusTopic,
 }) => {
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
@@ -26,10 +27,15 @@ Role: ${role}
 Experience Level: ${experienceLevel}
 Difficulty: ${difficulty}
 Interview Type: ${interviewType}
+${focusTopic ? `Focus Topic: ${focusTopic}` : ""}
 
 Rules:
 - Questions must be relevant and realistic for this specific role, experience level, and interview type.
-- Vary the topics covered within the interview type.
+${
+  focusTopic
+    ? `- All questions must specifically focus on the topic "${focusTopic}". Do not drift into unrelated topics.`
+    : "- Vary the topics covered within the interview type."
+}
 - Do not include any answers, only questions.
 
 Return ONLY a valid JSON array, with no markdown formatting, no code fences, and no explanation text before or after. Use exactly this structure:
