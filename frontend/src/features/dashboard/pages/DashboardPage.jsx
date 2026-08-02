@@ -43,6 +43,7 @@ export default function DashboardPage() {
           icon={HiOutlineRectangleStack}
           label="Interview Sessions"
           value={stats.totalSessions}
+          to="/interviews"
         />
         <StatCard
           icon={HiOutlineQuestionMarkCircle}
@@ -54,6 +55,7 @@ export default function DashboardPage() {
           label="Bookmarked"
           value={stats.totalBookmarked}
           accent="amber"
+          to="/bookmarks"
         />
       </div>
 
