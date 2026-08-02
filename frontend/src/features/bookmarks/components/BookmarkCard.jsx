@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { HiBookmark } from "react-icons/hi2";
+import { HiBookmark, HiOutlineArrowTopRightOnSquare } from "react-icons/hi2";
 
 import Card from "../../../components/ui/Card";
 import Badge, { difficultyToVariant } from "../../../components/ui/Badge";
@@ -37,7 +38,17 @@ export default function BookmarkCard({ question }) {
       <p className="text-sm text-text mb-2">{question.question}</p>
 
       {question.answer && (
-        <p className="text-sm text-text-secondary line-clamp-2">{question.answer}</p>
+        <p className="text-sm text-text-secondary line-clamp-2 mb-3">{question.answer}</p>
+      )}
+
+      {question.sessionId && (
+        <Link
+          to={`/interviews/${question.sessionId}/session?highlight=${question._id}`}
+          className="inline-flex items-center gap-1 text-xs text-accent-green hover:underline"
+        >
+          View in session
+          <HiOutlineArrowTopRightOnSquare className="w-3.5 h-3.5" />
+        </Link>
       )}
     </Card>
   );

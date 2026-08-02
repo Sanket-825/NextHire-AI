@@ -1,4 +1,5 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useParams, useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 
@@ -16,10 +17,10 @@ export default function InterviewSessionPage() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  // Carried over from CreateInterviewPage when the session was started from
-  // a "Recommended Topics" click on the dashboard. Optional — undefined for
-  // any normal session creation flow.
+  const [searchParams] = useSearchParams();
   const focusTopic = location.state?.focusTopic;
+  const highlightId = searchParams.get("highlight");
+  const highlightedRef = useRef(null);
   const {
     data: session,
     isLoading: isSessionLoading,
@@ -33,9 +34,18 @@ export default function InterviewSessionPage() {
   } = useSessionQuestions(sessionId);
   const generateQuestions = useGenerateQuestions(sessionId);
 
+  useEffect(() => {
+    if (highlightId && highlightedRef.current) {
+      const timeoutId = setTimeout(() => {
+        highlightedRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 150);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [highlightId, questions]);
+
   const handleGenerate = () => {
     generateQuestions.mutate(
-      { count: 6, focusTopic },
+      { count: 10, focusTopic },
       {
         onError: (error) =>
           toast.error(getErrorMessage(error, "Could not generate questions")),
@@ -51,8 +61,6 @@ export default function InterviewSessionPage() {
     );
   }
 
-  // Session doesn't exist (deleted, bad link, wrong id, etc.) or failed to load.
-  // Bail out here with a friendly message instead of crashing on session.role below.
   if (isSessionError || !session) {
     return (
       <div className="max-w-md mx-auto flex flex-col items-center text-center py-24 gap-3">
@@ -120,15 +128,27 @@ export default function InterviewSessionPage() {
 
       {!areQuestionsLoading && !areQuestionsError && questions?.length > 0 && (
         <div className="flex flex-col gap-4">
-          {questions.map((q, i) => (
-            <QuestionCard
-              key={q._id}
-              question={q}
-              index={i}
-              total={questions.length}
-              sessionId={sessionId}
-            />
-          ))}
+          {questions.map((q, i) => {
+            const isHighlighted = q._id === highlightId;
+            return (
+              <div
+                key={q._id}
+                ref={isHighlighted ? highlightedRef : null}
+                className={
+                  isHighlighted
+                    ? "rounded-xl ring-2 ring-accent-green ring-offset-2 ring-offset-background transition-all"
+                    : ""
+                }
+              >
+                <QuestionCard
+                  question={q}
+                  index={i}
+                  total={questions.length}
+                  sessionId={sessionId}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
