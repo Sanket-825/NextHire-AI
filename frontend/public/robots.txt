@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Allow: /forgot-password
+
+# Authenticated app routes — nothing useful for a crawler to index
+Disallow: /dashboard
+Disallow: /interviews
+Disallow: /bookmarks
+Disallow: /profile
+Disallow: /verify-otp
+Disallow: /reset-password
+
+Sitemap: https://next-hire-ai-ashy.vercel.app/sitemap.xml
