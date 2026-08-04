@@ -62,46 +62,46 @@ export const registerUser = asyncHandler(async (req, res) => {
  */
 export const verifyOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
-
+ 
   const pending = await PendingRegistration.findOne({ email });
   if (!pending) {
     res.status(400);
     throw new Error("No pending registration found for this email. Please register again.");
   }
-
+ 
   if (pending.otpExpiresAt < new Date()) {
     await PendingRegistration.deleteOne({ _id: pending._id });
     res.status(400);
     throw new Error("This code has expired. Please register again to get a new one.");
   }
-
+ 
   const otpHash = hashOtp(otp);
   if (otpHash !== pending.otpHash) {
     res.status(400);
     throw new Error("Invalid verification code");
   }
-
+ 
   const userExists = await User.findOne({ email });
   if (userExists) {
     await PendingRegistration.deleteOne({ _id: pending._id });
     res.status(400);
     throw new Error("An account with this email already exists");
   }
-
+ 
   const user = await User.create({
     name: pending.name,
     email: pending.email,
     password: pending.password, // pre-save hook hashes this on create
   });
-
+ 
   await PendingRegistration.deleteOne({ _id: pending._id });
-
+ 
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
-
+ 
   user.refreshToken = refreshToken;
   await user.save();
-
+ 
   res.status(201).json({
     success: true,
     accessToken,
@@ -111,6 +111,11 @@ export const verifyOtp = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       profileImage: user.profileImage,
+      bio: user.bio,
+      skills: user.skills,
+      github: user.github,
+      linkedin: user.linkedin,
+      resumeUrl: user.resumeUrl,
       theme: user.theme,
     },
   });
@@ -161,20 +166,20 @@ export const resendOtp = asyncHandler(async (req, res) => {
  */
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
+ 
   const user = await User.findOne({ email }).select("+password");
-
+ 
   if (!user || !(await user.matchPassword(password))) {
     res.status(401);
     throw new Error("Invalid email or password");
   }
-
+ 
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
-
+ 
   user.refreshToken = refreshToken;
   await user.save();
-
+ 
   res.status(200).json({
     success: true,
     accessToken,
@@ -184,6 +189,11 @@ export const loginUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       profileImage: user.profileImage,
+      bio: user.bio,
+      skills: user.skills,
+      github: user.github,
+      linkedin: user.linkedin,
+      resumeUrl: user.resumeUrl,
       theme: user.theme,
     },
   });

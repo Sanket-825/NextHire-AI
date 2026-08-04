@@ -33,7 +33,6 @@ export default function ProfilePage() {
       skills: (user.skills || []).join(", "),
       github: user.github || "",
       linkedin: user.linkedin || "",
-      resumeUrl: user.resumeUrl || "",
     },
   });
 
@@ -110,6 +109,13 @@ export default function ProfilePage() {
           />
 
           <div className="flex flex-col gap-1.5">
+            <label className="text-sm text-text-secondary">Email</label>
+            <p className="bg-surface border border-border rounded-lg px-3.5 py-2.5 text-sm text-text-secondary">
+              {user.email}
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
             <label htmlFor="bio" className="text-sm text-text-secondary">
               Bio
             </label>
@@ -135,7 +141,6 @@ export default function ProfilePage() {
 
           <Input label="GitHub" placeholder="https://github.com/username" {...register("github")} />
           <Input label="LinkedIn" placeholder="https://linkedin.com/in/username" {...register("linkedin")} />
-          <Input label="Resume URL" placeholder="https://..." {...register("resumeUrl")} />
 
           <Button type="submit" isLoading={updateProfile.isPending} className="w-full mt-2">
             Save changes
