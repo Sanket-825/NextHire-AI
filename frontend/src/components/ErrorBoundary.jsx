@@ -2,9 +2,6 @@ import { Component } from "react";
 import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 import Button from "./ui/Button";
 
-// Class component is required here — React error boundaries can only be
-// implemented with getDerivedStateFromError / componentDidCatch, there's
-// no hook equivalent (as of React 19).
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
@@ -16,8 +13,6 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // Logged to the console for now; swap for a real error-tracking
-    // service (Sentry, LogRocket, etc.) later if needed.
     console.error("Uncaught render error:", error, errorInfo);
   }
 
